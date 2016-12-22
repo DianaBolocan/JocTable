@@ -1,5 +1,4 @@
-struct scor
-{
+struct scor{
     short partide;
     short linii;
 };
@@ -8,8 +7,7 @@ struct zar{
 	short zar1, zar2;
 };
 
-struct player
-{
+struct player{
 	char nume[10];
 	scor scor;
 	zar zaruri;
@@ -17,8 +15,7 @@ struct player
 	short eliminate;
 };
 
-struct stiva
-{
+struct stiva{
 	char inf;
 	stiva *urm;
 }stiva *prim;
