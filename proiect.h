@@ -1,14 +1,20 @@
-struct player
+struct scor
 {
-	char nume[10];
-	short partide, linii;
-	zar zaruri;
-	char piesa;
-	short eliminate;
+    short partide;
+    short linii;
 };
 
 struct zar{
 	short zar1, zar2;
+};
+
+struct player
+{
+	char nume[10];
+	scor scor;
+	zar zaruri;
+	char piesa;
+	short eliminate;
 };
 
 struct stiva
