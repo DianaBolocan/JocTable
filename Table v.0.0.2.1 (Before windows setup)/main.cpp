@@ -9,7 +9,7 @@ void mesajMeniu()
     cout<<"Va puteti alege modul de joc:"<<endl;
     cout<<"Pentru a putea juca table cu un prieten introduceti 1,altfel 2."<<endl;
 }
-char detMode(char &mode)
+void detMode(char &mode)
 {
     //nr de mesaje = nr de  cuvinte (nu il ia in considerare pe spatiu ca facand parte dintr-un cuvant)
     char verification[100];
