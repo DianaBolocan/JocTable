@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1482666156 source:c:\users\diana\documents\codeblocks projects\proiect\the real shit\table v.0.0.2\main.cpp
+	<iostream>
+	<string.h>
+	"proiect.h"
+
+1482661145 c:\users\diana\documents\codeblocks projects\proiect\the real shit\table v.0.0.2\proiect.h
+
+1482638494 source:c:\users\diana\documents\codeblocks projects\joctable-master\table v.0.0.2.1 (before windows setup)\main.cpp
+	<iostream>
+	<string.h>
+	"proiect.h"
+
+1482638494 c:\users\diana\documents\codeblocks projects\joctable-master\table v.0.0.2.1 (before windows setup)\proiect.h
+
