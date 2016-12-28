@@ -5,6 +5,7 @@ struct player
 	short partide;
 	short zar1;
 	short zar2;
+	short sumazar;
 	char piesa;
 	short eliminate;
 };
