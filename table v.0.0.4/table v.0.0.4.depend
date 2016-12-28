@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1482921102 source:c:\users\user\desktop\table v.0.0.4\main.cpp
+	<iostream>
+	<string.h>
+
