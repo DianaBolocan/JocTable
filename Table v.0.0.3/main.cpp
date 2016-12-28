@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string.h>
-#include "proiect.h"
+
 using namespace std;
 
 //pop to be checked
@@ -38,6 +38,34 @@ bool sfarsitJoc(short eliminate)
     return false;
 }
 
+bool isMart(short eliminate)
+{
+    if(eliminate==0)
+        return true;
+    else return false;
+}
+void scorMart(player player1,player player2)
+{
+    if(sfarsitJoc(player1.eliminate)==1 && isMart(player2.eliminate)==1)
+        player1.linii+=2;
+    else
+        if(sfarsitJoc(player2.eliminate)==1 && isMart(player1.eliminate)==1)
+        player2.linii+=2;
+}
+void scor(short linii,short partide)
+{
+    if(linii==3)
+        partide++;
+        linii=0;
+}
+void castigatorJoc(player player1,player player2)
+{
+    if(player1.partide>player2.partide)
+        cout<<"Felicitari ,"<<player1.nume<<", ai castigat!";
+    else
+    if(player2.partide>player1.partide)
+        cout<<"Felicitari ,"<<player2.nume<<", ai castigat!";
+}
 //mesajMeniu checked and works fine
 void mesajMeniu()
 {
@@ -119,3 +147,5 @@ int main()
     ojocTable();
     return 0;
 }
+
+
