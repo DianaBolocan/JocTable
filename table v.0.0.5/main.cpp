@@ -136,13 +136,13 @@ short primulJucator(player player1,player player2)
     short suma2 = sumaZar(player2.zar1,player2.zar2);
     if(suma1 > suma2)
     {
-        cout<<"Prima mutare va fi facuta de jucatorul "<<player1.nume<<endl;
+        cout<<"Prima mutare va fi facuta de "<<player1.nume<<"."<<endl;
         return 1;
     }
     else
         if(suma2>suma1)
         {
-            cout<<"Prima mutare va fi facuta de jucatorul "<<player2.nume<<endl;
+            cout<<"Prima mutare va fi facuta de "<<player2.nume<<"."<<endl;
             return 2;
         }
     else primulJucator(player1,player2);
@@ -235,7 +235,7 @@ player resetScor(player playerNo)
     return playerNo;
 }
 
-void addData(player player1, player player2, char mode)
+void addData(player &player1, player &player2, char mode)
 {
     cout<<"Inainte de a incepe jocul vrem sa aflam cate ceva despre tine."<<endl;
     cout<<"Introduceti numele: ";
@@ -259,15 +259,29 @@ void ojocTable()
 {
     char mode;
     char tabla[26][15];
+    short startJucator;
     player player1, player2;
     mesajMeniu();
     detMode(mode);
     addData(player1,player2,mode);
     system("cls");
     defaultTabla(tabla);
+    startJucator = primulJucator(player1,player2);
     while(sfarsitJoc(player1.eliminate) == false && sfarsitJoc(player2.eliminate) == false)
     {
+        char deLa, la;
         afisareTabla(tabla);
+        if(startJucator == 1)
+        {
+            cout<<player1.nume;
+        }
+        else
+            cout<<player2.nume;
+        cout<<" introduce numarul liniei de unde vrei sa iei piesa si numarul liniei unde vrei s-o pui: ";
+        cin>>deLa;
+        cin>>la;
+        cout<<deLa<<" "<<la;
+        system("cls");
     }
     // More to come.
 }
