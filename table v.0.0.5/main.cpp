@@ -302,19 +302,19 @@ bool checkDateIntrare(short dela,short la,short startJucator,player player1,play
 {
     if(dela<=0 || dela>=25)
     {
-        cout<<"dela iesit din limite"<<endl;
+        cout<<"S-a iesit din limite"<<endl;
         return false;
     }
     if(la<=0 || la>=25)
     {
-        cout<<"la iesit din limite"<<endl;
+        cout<<"S-a iesit din limite"<<endl;
         return false;
     }
     if(startJucator == 1)
     {
         if(dela - la <= 0)
         {
-            cout<<"directie gresita"<<endl;
+            cout<<"Directie gresita"<<endl;
             return false;
         }
         if(tabla[dela][0] == ' ' || tabla[dela][0] == 'N')
@@ -322,7 +322,7 @@ bool checkDateIntrare(short dela,short la,short startJucator,player player1,play
             cout<<"dela invalid. spatiu gol sau ocupat de oponent"<<endl;
             return false;
         }
-        if((dela - la) != player1.zar1 || (dela - la) != player1.zar2)
+        if((dela - la) != player1.zar1 && (dela - la) != player1.zar2)
         {
             cout<<"mutarea nu coincide cu zarul"<<endl;
             return false;
@@ -345,7 +345,7 @@ bool checkDateIntrare(short dela,short la,short startJucator,player player1,play
             cout<<"dela invalid. spatiu gol sau ocupat de oponent"<<endl;
             return false;
         }
-        if((dela - la) != player2.zar1 || (dela - la) != player2.zar2)
+        if((la - dela) != player2.zar1 && (la - dela) != player2.zar2)
         {
             cout<<"mutarea nu coincide cu zarul"<<endl;
             return false;
@@ -393,14 +393,7 @@ void ojocTable()
 
 int main()
 {
-    char tabla[26][15];
-    defaultTabla(tabla);
-    for(short i=0;i<26;i++)
-    {
-        for(short j=0;j<15;j++)
-            cout<<tabla[i][j];
-        cout<<endl;
-    }
+    ojocTable();
     return 0;
 }
 
