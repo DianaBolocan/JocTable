@@ -1,6 +1,12 @@
 #include "proiect.h"
 using namespace std;
 
+void resetZaruri(player &playerNo)
+{
+    playerNo.zar1 = 0;
+    playerNo.zar2 = 0;
+}
+
 void defaultTabla(char tabla[26][15])
 {
     short linie,coloana;
@@ -129,7 +135,7 @@ int sumaZar(short zar1,short zar2)
     return suma;
 }
 
-short primulJucator(player player1,player player2)
+short primulJucator(player &player1,player &player2)
 {
     srand(time(nullptr));
     short suma1 = sumaZar(player1.zar1,player1.zar2);
@@ -137,12 +143,14 @@ short primulJucator(player player1,player player2)
     if(suma1 > suma2)
     {
         cout<<"Prima mutare va fi facuta de "<<player1.nume<<"."<<endl;
+        resetZaruri(player2);
         return 1;
     }
     else
         if(suma2>suma1)
         {
             cout<<"Prima mutare va fi facuta de "<<player2.nume<<"."<<endl;
+            resetZaruri(player1);
             return 2;
         }
     else primulJucator(player1,player2);
@@ -221,18 +229,53 @@ char detMode(char &mode)
         mode = verification[0];
 }
 
-player resetZaruri(player playerNo)
-{
-    playerNo.zar1 = 0;
-    playerNo.zar2 = 0;
-    return playerNo;
-}
-
-player resetScor(player playerNo)
+void resetScor(player &playerNo)
 {
     playerNo.linii = 0;
     playerNo.partide = 0;
-    return playerNo;
+}
+
+void repartizareZaruriJoc(short startJucator, player &player1, player &player2)
+{
+    cout<<"Zarurile sunt: ";
+    if(startJucator == 1)
+        {
+            player1.zar1 = randomDices();
+            player1.zar2 = randomDices();
+            cout<<player1.zar1<<" si "<<player1.zar2<<endl;
+        }
+        else
+        {
+            player2.zar1 = randomDices();
+            player2.zar2 = randomDices();
+            cout<<player2.zar1<<" si "<<player2.zar2<<endl;
+        }
+}
+
+void dateDeIntrare(short &deLa,short &la,player player1,player player2,short startJucator,char mode)
+{
+    if(mode == '1')
+        {
+            if(startJucator == 1)
+            cout<<player1.nume;
+            else
+            cout<<player2.nume;
+            cout<<" introduce numarul liniei de unde vrei sa iei piesa: ";
+            cin>>deLa;
+            cout<<" si numarul liniei unde vrei s-o pui: ";
+            cin>>la;
+        }
+        else
+        {
+            if(startJucator == 1)
+            {
+                cout<<player1.nume;
+                cout<<" introduce numarul liniei de unde vrei sa iei piesa: ";
+                cin>>deLa;
+                cout<<" si numarul liniei unde vrei s-o pui: ";
+                cin>>la;
+            }
+        }
 }
 
 void addData(player &player1, player &player2, char mode)
@@ -240,9 +283,9 @@ void addData(player &player1, player &player2, char mode)
     cout<<"Inainte de a incepe jocul vrem sa aflam cate ceva despre tine."<<endl;
     cout<<"Introduceti numele: ";
     cin>>player1.nume;
-    player1 = resetScor(player1);
+    resetScor(player1);
     player1.piesa = 'A';
-    player1 = resetZaruri(player1);
+    resetZaruri(player1);
     if(mode == '2')
         strcpy(player2.nume,"Computer");
     else
@@ -250,9 +293,70 @@ void addData(player &player1, player &player2, char mode)
         cout<<"Introduceti numele celui de-al doilea jucator: ";
         cin>>player2.nume;
     }
-    player2 = resetScor(player2);
-    player2 = resetZaruri(player2);
+    resetScor(player2);
+    resetZaruri(player2);
     player2.piesa = 'N';
+}
+
+bool checkDateIntrare(short dela,short la,short startJucator,player player1,player player2,char tabla[26][15])
+{
+    if(dela<=0 || dela>=25)
+    {
+        cout<<"dela iesit din limite"<<endl;
+        return false;
+    }
+    if(la<=0 || la>=25)
+    {
+        cout<<"la iesit din limite"<<endl;
+        return false;
+    }
+    if(startJucator == 1)
+    {
+        if(dela - la <= 0)
+        {
+            cout<<"directie gresita"<<endl;
+            return false;
+        }
+        if(tabla[dela][0] == ' ' || tabla[dela][0] == 'N')
+        {
+            cout<<"dela invalid. spatiu gol sau ocupat de oponent"<<endl;
+            return false;
+        }
+        if((dela - la) != player1.zar1 || (dela - la) != player1.zar2)
+        {
+            cout<<"mutarea nu coincide cu zarul"<<endl;
+            return false;
+        }
+        if(tabla[la][0] == 'N' && tabla[la][1] == 'N')
+        {
+            cout<<"la ocupat de oponent"<<endl;
+            return false;
+        }
+    }
+    if(startJucator == 2)
+    {
+        if(dela - la >= 0)
+        {
+            cout<<"directie gresita"<<endl;
+            return false;
+        }
+        if(tabla[dela][0] == ' ' || tabla[dela][0] == 'A')
+        {
+            cout<<"dela invalid. spatiu gol sau ocupat de oponent"<<endl;
+            return false;
+        }
+        if((dela - la) != player2.zar1 || (dela - la) != player2.zar2)
+        {
+            cout<<"mutarea nu coincide cu zarul"<<endl;
+            return false;
+        }
+        if(tabla[la][0] == 'A' && tabla[la][1] == 'A')
+        {
+            cout<<"la ocupat de oponent"<<endl;
+            return false;
+        }
+    }
+    return true;
 }
 
 void ojocTable()
@@ -269,18 +373,19 @@ void ojocTable()
     startJucator = primulJucator(player1,player2);
     while(sfarsitJoc(player1.eliminate) == false && sfarsitJoc(player2.eliminate) == false)
     {
-        char deLa, la;
+        short deLa, la;
         afisareTabla(tabla);
-        if(startJucator == 1)
-        {
-            cout<<player1.nume;
-        }
-        else
-            cout<<player2.nume;
-        cout<<" introduce numarul liniei de unde vrei sa iei piesa si numarul liniei unde vrei s-o pui: ";
-        cin>>deLa;
-        cin>>la;
-        cout<<deLa<<" "<<la;
+        cout<<endl;
+        repartizareZaruriJoc(startJucator,player1,player2);
+
+        datedeintrare:
+        dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
+        if(checkDateIntrare(deLa,la,startJucator,player1,player2,tabla) == false)
+            {
+                cout<<"Can't do that"<<endl;
+                goto datedeintrare;
+            }
+
         system("cls");
     }
     // More to come.
@@ -288,7 +393,14 @@ void ojocTable()
 
 int main()
 {
-    ojocTable();
+    char tabla[26][15];
+    defaultTabla(tabla);
+    for(short i=0;i<26;i++)
+    {
+        for(short j=0;j<15;j++)
+            cout<<tabla[i][j];
+        cout<<endl;
+    }
     return 0;
 }
 
