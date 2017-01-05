@@ -362,9 +362,9 @@ bool checkDateIntrare(short dela,short la,short startJucator,player player1,play
 void mutari(short dela,short la,char tabla[26][15])
 {
 int index1=0,index2=0,coloana=0;
-int piesacurenta=tabla[dela][coloana];
+char piesacurenta=tabla[dela][coloana];
 
-  if(tabla[la][0]!=piesacurenta)
+  if(tabla[la][0]!=piesacurenta && tabla[la][0]!=' ')
   {  if(tabla[la][0]=='A')
       {
           while(tabla[0][index1]!=' ')
@@ -385,8 +385,10 @@ int piesacurenta=tabla[dela][coloana];
   }
   else
      if(tabla[la][0]==' ')
-     {
-         tabla[la][0]=piesacurenta;
+     { if(piesacurenta='A')
+         tabla[la][0]='A';
+         else
+            tabla[la][0]='N';
 
      }
   else
@@ -408,7 +410,7 @@ int piesacurenta=tabla[dela][coloana];
    }
   tabla[dela][coloana-1]=' ';
 }
-
+char tabla[26][15];
 void ojocTable()
 {
     char mode;
