@@ -410,6 +410,59 @@ char piesacurenta=tabla[dela][coloana];
    }
   tabla[dela][coloana-1]=' ';
 }
+
+bool verificareMutare(short &zar,short startJucator,short dela,char tabla[26][15])
+{ int lin;
+
+    if(startJucator=='1')
+    {
+        if(tabla[0][0]!=' ')
+        {
+            if(tabla[7+zar-1][0]=='N' && tabla[7+zar-1][1]=='N' )
+                return false;
+        }
+        else
+         {
+            lin=dela-zar;
+            if( lin>0)
+            {
+               if(tabla[lin][0]=='N' && tabla[lin][1]=='N'  )
+                  return false;
+            }
+            else if(lin<=0)
+            {
+                if(tabla[dela-zar+24][0]=='N' && tabla[dela-zar+24][1]=='N')
+                    return false;
+            }
+         }
+    }
+    else
+
+    {
+        if(tabla[25][0]!=' ')
+        {
+            if(tabla[18-zar+1][0]='A' && tabla[18-zar+1][1]=='A')
+                return false;
+        }
+        else
+            {
+                lin=dela+zar;
+                if(lin<25)
+                {
+                    if(tabla[lin][0]=='A' && tabla[lin][1]=='A ')
+                     return false;
+                }
+                else if(lin>=25)
+                {
+                    if(tabla[dela+zar-24][0]=='A' && tabla[dela+zar-24][1]=='A')
+                        return false;
+                }
+
+            }
+    }
+    zar=0;
+    return true;
+}
 char tabla[26][15];
 void ojocTable()
 {
