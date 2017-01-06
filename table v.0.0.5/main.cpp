@@ -298,94 +298,347 @@ void addData(player &player1, player &player2, char mode)
     player2.piesa = 'N';
 }
 
-bool checkDateIntrare(short dela,short la,short startJucator,player player1,player player2,char tabla[26][15])
+bool checkToatePieseleInCasa(char tabla[26][15],short startJucator)
 {
-    if(dela<=0 || dela>=25)
-    {
-        cout<<"S-a iesit din limite"<<endl;
-        return false;
-    }
-    if(la<=0 || la>=25)
-    {
-        cout<<"S-a iesit din limite"<<endl;
-        return false;
-    }
     if(startJucator == 1)
     {
-        if(dela - la <= 0)
-        {
-            cout<<"Directie gresita"<<endl;
+        if(tabla[0][0] != ' ')
             return false;
-        }
-        if(tabla[dela][0] == ' ' || tabla[dela][0] == 'N')
-        {
-            cout<<"dela invalid. spatiu gol sau ocupat de oponent"<<endl;
+        for(short linie=24;linie>6;linie++)
+            if(tabla[linie][0] != ' ')
             return false;
-        }
-        if((dela - la) != player1.zar1 && (dela - la) != player1.zar2)
-        {
-            cout<<"mutarea nu coincide cu zarul"<<endl;
-            return false;
-        }
-        if(tabla[la][0] == 'N' && tabla[la][1] == 'N')
-        {
-            cout<<"la ocupat de oponent"<<endl;
-            return false;
-        }
     }
     if(startJucator == 2)
     {
-        if(dela - la >= 0)
+        if(tabla[25][0] != ' ')
+            return false;
+        for(short linie=1;linie<19;linie++)
+            if(tabla[linie][0] != ' ')
+            return false;
+    }
+    return true;
+}
+
+bool checkPieseEliminate(short startJucator,char tabla[26][15])
+{
+    if(startJucator == 1)
+    {
+        if(tabla[0][0] == ' ')
+            return true;
+    }
+    if(startJucator == 2)
+    {
+        if(tabla[25][0] == ' ')
+            return true;
+    }
+    return false;
+}
+
+bool checkDeLa(short dela,short startJucator)
+{
+    if(startJucator == 1)
+        if(dela != 0)
+            return false;
+    if(startJucator == 2)
+        if(dela != 25)
+            return false;
+    return true;
+}
+
+bool checkDateIntrare(short dela,short la,short startJucator,player player1,player player2,char tabla[26][15])
+{
+    if(checkToatePieseleInCasa(tabla,startJucator) == true)
+    {
+        if(startJucator == 1)
         {
-            cout<<"directie gresita"<<endl;
+            if(dela<1 || dela>6)
+            {
+                cout<<"S-a iesit din limite"<<endl;
+                return false;
+            }
+            if(la!=-1 || (la<1 || la>5))
+            {
+                cout<<"S-a iesit din limite"<<endl;
+                return false;
+            }
+            if(dela <= la)
+            {
+                cout<<"directie gresita"<<endl;
+                return false;
+            }
+            if(tabla[dela][0] == ' ' || tabla[dela][0] == 'N')
+            {
+                cout<<"nu exista piesa sau spatiu ocupat de oponent"<<endl;
+                return false;
+            }
+            if(la == -1)
+            {
+                if(dela != player1.zar1 || dela != player1.zar2)
+                {
+                    cout<<"mutarea nu coincide cu zarul"<<endl;
+                    return false;
+                }
+            }
+            else
+            {
+                if(dela - la != player1.zar1 || dela - la != player1.zar2)
+                {
+                    cout<<"mutarea nu coincide cu zarul"<<endl;
+                    return false;
+                }
+                if(tabla[la][0] == 'N' && tabla[la][1] == 'N')
+                {
+                    cout<<"la ocupat de oponent"<<endl;
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            if(dela>24 && dela<19)
+            {
+                cout<<"S-a iesit din limite"<<endl;
+                return false;
+            }
+            if(la!=-1 || (la<20 || la>24))
+            {
+                cout<<"S-a iesit din limite"<<endl;
+                return false;
+            }
+            if(dela >= la && la != -1)
+            {
+                cout<<"directie gresita"<<endl;
+                return false;
+            }
+            if(tabla[dela][0] == ' ' || tabla[dela][0] == 'A')
+            {
+                cout<<"nu exista piesa sau spatiu ocupat de oponent"<<endl;
+                return false;
+            }
+            if(la == -1)
+            {
+                if(25 - dela != player1.zar1 || 25 - dela != player1.zar2)
+                {
+                    cout<<"mutarea nu coincide cu zarul"<<endl;
+                    return false;
+                }
+            }
+            else
+            {
+                if(la - dela != player1.zar1 || la - dela != player1.zar2)
+                {
+                    cout<<"mutarea nu coincide cu zarul"<<endl;
+                    return false;
+                }
+                if(tabla[la][0] == 'A' && tabla[la][1] == 'A')
+                {
+                    cout<<"la ocupat de oponent"<<endl;
+                    return false;
+                }
+            }
+        }
+
+    }
+    else
+    {
+        if(dela<0 || dela>25)
+        {
+            cout<<"S-a iesit din limite"<<endl;
             return false;
         }
-        if(tabla[dela][0] == ' ' || tabla[dela][0] == 'A')
+        if(la<=0 || la>=25)
         {
-            cout<<"dela invalid. spatiu gol sau ocupat de oponent"<<endl;
+            cout<<"S-a iesit din limite"<<endl;
             return false;
         }
-        if((la - dela) != player2.zar1 && (la - dela) != player2.zar2)
+        if(startJucator == 1)
         {
-            cout<<"mutarea nu coincide cu zarul"<<endl;
-            return false;
+            if(dela - la <= 0)
+            {
+                cout<<"Directie gresita"<<endl;
+                return false;
+            }
+            if(tabla[dela][0] == ' ' || tabla[dela][0] == 'N')
+            {
+                cout<<"dela invalid. spatiu gol sau ocupat de oponent"<<endl;
+                return false;
+            }
+            if((dela - la) != player1.zar1 && (dela - la) != player1.zar2)
+            {
+                cout<<"mutarea nu coincide cu zarul"<<endl;
+                return false;
+            }
+            if(tabla[la][0] == 'N' && tabla[la][1] == 'N')
+            {
+                cout<<"la ocupat de oponent"<<endl;
+                return false;
+            }
         }
-        if(tabla[la][0] == 'A' && tabla[la][1] == 'A')
+        if(startJucator == 2)
         {
-            cout<<"la ocupat de oponent"<<endl;
-            return false;
+            if(dela - la >= 0)
+            {
+                cout<<"directie gresita"<<endl;
+                return false;
+            }
+            if(tabla[dela][0] == ' ' || tabla[dela][0] == 'A')
+            {
+                cout<<"dela invalid. spatiu gol sau ocupat de oponent"<<endl;
+                return false;
+            }
+            if((la - dela) != player2.zar1 && (la - dela) != player2.zar2)
+            {
+                cout<<"mutarea nu coincide cu zarul"<<endl;
+                return false;
+            }
+            if(tabla[la][0] == 'A' && tabla[la][1] == 'A')
+            {
+                cout<<"la ocupat de oponent"<<endl;
+                return false;
+            }
         }
     }
     return true;
+}
+
+player translatePlayer(short startJucator,player player1, player player2)
+{
+    if(startJucator == 1)
+        return player1;
+    else
+        return player2;
+}
+
+bool isDubla(player playerNo)
+{
+    if(playerNo.zar1 == playerNo.zar2)
+        return true;
+    return false;
+}
+
+void mutari(short dela,short la,char tabla[26][15])
+{
+    int indexParcurgere = 0, coloana = 0;
+    char piesacurenta = tabla[dela][0];
+
+    if(tabla[la][0] != piesacurenta && tabla[la][0] != ' ')
+    {
+        if(tabla[la][0] == 'A')
+        {
+            while(tabla[0][indexParcurgere] != ' ')
+                indexParcurgere++;
+            tabla[0][indexParcurgere] = 'A';
+        }
+        else
+        {
+            while(tabla[25][indexParcurgere] != ' ')
+                indexParcurgere++;
+            tabla[0][indexParcurgere] = 'N';
+        }
+        tabla[la][0] = piesacurenta;
+    }
+    else if(tabla[la][0] == ' ')
+        tabla[la][0] = piesacurenta;
+    else if(tabla[la][0] == piesacurenta)
+    {
+        while(tabla[la][coloana] != ' ')
+            coloana++;
+        tabla[la][coloana]=piesacurenta;
+    }
+    coloana = 0;
+    while (tabla[dela][coloana] != ' ')
+        coloana++;
+    tabla[dela][coloana-1]=' ';
+}
+
+void mutareFacuta(short &countMutari, player &playerNo,short mutare)
+{
+    if(countMutari > 2)
+    {
+        countMutari--;
+    }
+    else
+    {
+        countMutari--;
+        if(mutare == playerNo.zar1)
+            playerNo.zar1 = 0;
+        else
+            playerNo.zar2 = 0;
+    }
+}
+
+void switchPlayers(short &startJucator)
+{
+    if(startJucator == 1)
+        startJucator = 2;
+    else
+        startJucator = 1;
 }
 
 void ojocTable()
 {
     char mode;
     char tabla[26][15];
-    short startJucator;
+    short startJucator,countMutari;
     player player1, player2;
+
     mesajMeniu();
     detMode(mode);
     addData(player1,player2,mode);
     system("cls");
     defaultTabla(tabla);
     startJucator = primulJucator(player1,player2);
+
     while(sfarsitJoc(player1.eliminate) == false && sfarsitJoc(player2.eliminate) == false)
     {
         short deLa, la;
+
         afisareTabla(tabla);
         cout<<endl;
+
         repartizareZaruriJoc(startJucator,player1,player2);
 
-        datedeintrare:
-        dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
-        if(checkDateIntrare(deLa,la,startJucator,player1,player2,tabla) == false)
+        if(isDubla(translatePlayer(startJucator,player1,player2)) == true)
+            countMutari = 4;
+        else
+            countMutari = 2;
+
+        while(countMutari)
+        {
+            datedeintrare:
+            dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
+
+            if(checkPieseEliminate(startJucator,tabla) == false)
+            {
+                if(checkDeLa(deLa,startJucator) == false)
+                {
+                    cout<<"Ai piese eliminate de oponent care trebuie puse inapoi in joc"<<endl;
+                    goto datedeintrare;
+                }
+            }
+            if(checkDateIntrare(deLa,la,startJucator,player1,player2,tabla) == false)
             {
                 cout<<"Can't do that"<<endl;
                 goto datedeintrare;
             }
+            mutari(deLa,la,tabla);
+            system("cls");
+            afisareTabla(tabla);
+            if(startJucator == 1)
+            {
+                short mutare = deLa - la;
+                mutareFacuta(countMutari,player1,mutare);
+                cout<<player1.zar1<<" "<<player1.zar2<<endl;
+            }
+            else if(startJucator == 2)
+            {
+                short mutare = la - deLa;
+                mutareFacuta(countMutari,player2,mutare);
+                cout<<player2.zar1<<" "<<player2.zar2<<endl;
+            }
+        }
 
+        switchPlayers(startJucator);
         system("cls");
     }
     // More to come.
