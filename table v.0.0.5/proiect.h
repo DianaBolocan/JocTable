@@ -2,7 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
-#include <time.h>
+#include <windows.h>
 
 struct player
 {
