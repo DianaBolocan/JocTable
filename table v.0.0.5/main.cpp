@@ -659,6 +659,37 @@ void switchPlayers(short &startJucator)
     else
         startJucator = 1;
 }
+void highScores()
+{
+    for(int index=0;index<10;index++)
+        for(int indexy=index+1;indexy<10;indexy++)
+           if(players[index].partide<players[indexy].partide||(players[index].partide==players[indexy].partide && players[index].linii<players[indexy].linii))
+               swap(players[index],players[indexy]);
+}
+void updateScoreFile()
+{
+    ofstream fout;
+    fout.open("clasament");
+    for(int index=0;index<10;index++)
+        fout<<players[index].numeJucator<<' '<<players[index].partide<<'\n';
+    fout.close();
+}
+void newScore(char nume_jucator,int partida)
+{
+    for(int index=0;index<10;index++)
+        if(partida>players[index].partide)
+          {
+            for(int indexy=9;indexy>=index+1;indexy--)
+            {
+                players[indexy].partide=players[indexy-1].partide;
+                players[indexy].numeJucator=players[indexy-1].numeJucator;
+            }
+            players[index].partide=partida;
+            players[index].numeJucator=nume_jucator;
+            break;
+
+          }
+}
 
 void ojocTable()
 {
