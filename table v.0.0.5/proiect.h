@@ -3,7 +3,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <windows.h>
-
+#include <fstream>
 struct player
 {
 	char nume[10];
@@ -14,5 +14,11 @@ struct player
 	char piesa;
 	short eliminate;
 };
+struct clasamentJoc
+{
+    char numeJucator;
+    int partide;
+    int linii;
+}players[10];
 
 
