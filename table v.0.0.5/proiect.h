@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <fstream>
+#define file_name "clasament.txt"
 struct player
 {
 	char nume[10];
@@ -16,9 +17,9 @@ struct player
 };
 struct clasamentJoc
 {
-    char numeJucator;
+    char *numeJucator;
     int partide;
     int linii;
-}players[10];
+}scor[10];
 
 
