@@ -663,29 +663,31 @@ void highScores()
 {
     for(int index=0;index<10;index++)
         for(int indexy=index+1;indexy<10;indexy++)
-           if(players[index].partide<players[indexy].partide||(players[index].partide==players[indexy].partide && players[index].linii<players[indexy].linii))
-               swap(players[index],players[indexy]);
+           if(scor[index].partide<scor[indexy].partide||(scor[index].partide=scor[index].partide && scor[index].linii<scor[index].linii))
+               swap(scor[index],scor[indexy]);
 }
 void updateScoreFile()
 {
     ofstream fout;
-    fout.open("clasament");
+    fout.open(file_name);
     for(int index=0;index<10;index++)
-        fout<<players[index].numeJucator<<' '<<players[index].partide<<'\n';
+        fout<<scor[index].numeJucator<<" "<<scor[index].partide<<'\n';
     fout.close();
 }
-void newScore(char nume_jucator,int partida)
+void newScore(char* nume_jucator,int partida,int linie)
 {
     for(int index=0;index<10;index++)
-        if(partida>players[index].partide)
+        if(partida>scor[index].partide || (partida==scor[index].partide&& linie>scor[index].linii))
           {
             for(int indexy=9;indexy>=index+1;indexy--)
             {
-                players[indexy].partide=players[indexy-1].partide;
-                players[indexy].numeJucator=players[indexy-1].numeJucator;
+                scor[indexy].partide=scor[indexy-1].partide;
+                scor[indexy].numeJucator=scor[indexy-1].numeJucator;
+                scor[indexy].linii=scor[indexy-1].linii;
             }
-            players[index].partide=partida;
-            players[index].numeJucator=nume_jucator;
+            scor[index].partide=partida;
+            scor[index].numeJucator=nume_jucator;
+            scor[index].linii=linie;
             break;
 
           }
@@ -894,6 +896,25 @@ void ojocTable()
 int main()
 {
     ojocTable();
+     /*int partida,linie; player player;
+    ifstream fin;
+    fin.open(file_name);
+    for(int index=0;index<10;index++)
+    {
+        fin>>scor[index].numeJucator;
+        fin>>scor[index].partide;
+        fin>>scor[index].linii;
+    }
+    highScores();
+    fin.close();
+    for(int index=0;index<10;index++)
+    {
+        cout<<scor[index].numeJucator;
+        cout<<scor[index].partide;
+        cout<<scor[index].linii<<endl;
+    }
+    newScore(player.nume,partida,linie);
+    updateScoreFile();*/
     return 0;
 }
 
