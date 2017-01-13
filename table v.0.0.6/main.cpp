@@ -304,45 +304,100 @@ void repartizareZaruriJoc(short startJucator, player &player1, player &player2)
         }
 }
 
-void dateDeIntrare(short &deLa,short &la,player player1,player player2,short startJucator,char mode)
+void dateDeIntrare(short &deLa,short &la,player player1,player player2,short startJucator,char mode,bool &firstMove)
 {
     char verification1[1001],verification2[1001];
     if(mode == '1')
     {
         if(startJucator == 1)
         {
-            cout<<player1.nume;
-            cout<<" introduce numarul liniei de unde vrei sa iei piesa."<<endl;
-            cin.get();
-            cinGetLine(verification1);
-            if(checkLinieIncadrare(verification1) == false)
-                dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
+            if(firstMove == false)
+            {
+                cout<<player1.nume;
+                cout<<" is first to make a move."<<endl;
+                cin.get();
+                cout<<"From where do you want to take the piece? ";
+                cinGetLine(verification1);
+                cout<<verification1<<endl;
+                if(checkLinieIncadrare(verification1) == false)
+                    dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
+                else
+                    transformCharInt(deLa,verification1);
+                cout<<"Where do you want to place the piece? "<<endl;
+                cinGetLine(verification2);
+                cin.get();
+                cout<<verification2<<endl;
+                if(checkLinieIncadrare(verification2) == false)
+                    dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
+                else
+                    transformCharInt(la,verification2);
+                firstMove = false;
+            }
             else
-                transformCharInt(deLa,verification1);
-            cout<<"si numarul liniei unde vrei s-o pui."<<endl;
-            cinGetLine(verification2);
-            if(checkLinieIncadrare(verification2) == false)
-                dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
-            else
-                transformCharInt(la,verification2);
+            {
+                cout<<player1.nume;
+                cout<<", press ENTER to give us the numbers.";
+                cin.get();
+                cout<<"From where do you want to take the piece? ";
+                cinGetLine(verification1);
+                cout<<verification1<<endl;
+                if(checkLinieIncadrare(verification1) == false)
+                    dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
+                else
+                    transformCharInt(deLa,verification1);
+                cout<<"Where do you want to place the piece? "<<endl;
+                cinGetLine(verification2);
+                cin.get();
+                cout<<verification2<<endl;
+                if(checkLinieIncadrare(verification2) == false)
+                    dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
+                else
+                    transformCharInt(la,verification2);
+            }
         }
         else
         {
-            cout<<player2.nume;
-
-            cout<<" introduce numarul liniei de unde vrei sa iei piesa: "<<endl;
-            cin.get();
-            cinGetLine(verification1);
-            if(checkLinieIncadrare(verification1) == false)
-                dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
+            if(firstMove == true)
+            {
+                cout<<player2.nume;
+                cout<<" is first to make a move."<<endl;
+                cin.get();
+                cout<<"From where do you want to take the piece? ";
+                cinGetLine(verification1);
+                cout<<verification1<<endl;
+                if(checkLinieIncadrare(verification1) == false)
+                    dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
+                else
+                    transformCharInt(deLa,verification1);
+                cout<<"Where do you want to place the piece? "<<endl;
+                cinGetLine(verification2);
+                cout<<verification2<<endl;
+                if(checkLinieIncadrare(verification2) == false)
+                    dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
+                else
+                    transformCharInt(la,verification2);
+                firstMove = false;
+            }
             else
-                transformCharInt(deLa,verification1);
-            cout<<"si numarul liniei unde vrei s-o pui: "<<endl;
-            cinGetLine(verification2);
-            if(checkLinieIncadrare(verification2) == false)
-                dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
-            else
-                transformCharInt(la,verification2);
+            {
+                cout<<player2.nume;
+                cout<<", press ENTER to give us the numbers.";
+                cin.get();
+                cout<<"From where do you want to take the piece? ";
+                cinGetLine(verification1);
+                cout<<verification1<<endl;
+                if(checkLinieIncadrare(verification1) == false)
+                    dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
+                else
+                    transformCharInt(deLa,verification1);
+                cout<<"Where do you want to place the piece? "<<endl;
+                cinGetLine(verification2);
+                cout<<verification2<<endl;
+                if(checkLinieIncadrare(verification2) == false)
+                    dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
+                else
+                    transformCharInt(la,verification2);
+            }
         }
     }
 
@@ -459,62 +514,62 @@ bool checkDatePieseEliminate(short dela,short la,short startJucator,player playe
 
 bool checkDateIntrare(short dela,short la,short startJucator,player player1,player player2,char tabla[26][15])
 {
-        if(dela<0 || dela>25)
+    if(dela<0 || dela>25)
+    {
+        cout<<"S-a iesit din limite"<<endl;
+        return false;
+    }
+    if(la<=0 || la>=25)
+    {
+        cout<<"S-a iesit din limite"<<endl;
+        return false;
+    }
+    if(startJucator == 1)
+    {
+        if(dela - la <= 0)
         {
-            cout<<"S-a iesit din limite"<<endl;
+            cout<<"Directie gresita"<<endl;
             return false;
         }
-        if(la<=0 || la>=25)
+        if(tabla[dela][0] == ' ' || tabla[dela][0] == 'N')
         {
-            cout<<"S-a iesit din limite"<<endl;
+            cout<<"dela invalid. spatiu gol sau ocupat de oponent"<<endl;
             return false;
         }
-        if(startJucator == 1)
+        if((dela - la) != player1.zar1 && (dela - la) != player1.zar2)
         {
-            if(dela - la <= 0)
-            {
-                cout<<"Directie gresita"<<endl;
-                return false;
-            }
-            if(tabla[dela][0] == ' ' || tabla[dela][0] == 'N')
-            {
-                cout<<"dela invalid. spatiu gol sau ocupat de oponent"<<endl;
-                return false;
-            }
-            if((dela - la) != player1.zar1 && (dela - la) != player1.zar2)
-            {
-                cout<<"mutarea nu coincide cu zarul"<<endl;
-                return false;
-            }
-            if(tabla[la][0] == 'N' && tabla[la][1] == 'N')
-            {
-                cout<<"la ocupat de oponent"<<endl;
-                return false;
-            }
+            cout<<"mutarea nu coincide cu zarul"<<endl;
+            return false;
         }
-        if(startJucator == 2)
+        if(tabla[la][0] == 'N' && tabla[la][1] == 'N')
         {
-            if(dela - la >= 0)
-            {
-                cout<<"directie gresita"<<endl;
-                return false;
-            }
-            if(tabla[dela][0] == ' ' || tabla[dela][0] == 'A')
-            {
-                cout<<"dela invalid. spatiu gol sau ocupat de oponent"<<endl;
-                return false;
-            }
-            if((la - dela) != player2.zar1 && (la - dela) != player2.zar2)
-            {
-                cout<<"mutarea nu coincide cu zarul"<<endl;
-                return false;
-            }
-            if(tabla[la][0] == 'A' && tabla[la][1] == 'A')
-            {
-                cout<<"la ocupat de oponent"<<endl;
-                return false;
-            }
+            cout<<"la ocupat de oponent"<<endl;
+            return false;
         }
+    }
+    if(startJucator == 2)
+    {
+        if(dela - la >= 0)
+        {
+            cout<<"directie gresita"<<endl;
+            return false;
+        }
+        if(tabla[dela][0] == ' ' || tabla[dela][0] == 'A')
+        {
+            cout<<"dela invalid. spatiu gol sau ocupat de oponent"<<endl;
+            return false;
+        }
+        if((la - dela) != player2.zar1 && (la - dela) != player2.zar2)
+        {
+            cout<<"mutarea nu coincide cu zarul"<<endl;
+            return false;
+        }
+        if(tabla[la][0] == 'A' && tabla[la][1] == 'A')
+        {
+            cout<<"la ocupat de oponent"<<endl;
+            return false;
+        }
+    }
     return true;
 }
 
@@ -921,7 +976,7 @@ void ojocTable()
 {
     char mode, tabla[26][15];
     short startJucator,countMutari;
-    bool ambeleZaruriImposibile = false;
+    bool ambeleZaruriImposibile = false, firstMove = true;
     player player1, player2;
 
     mesajMeniu();
@@ -953,7 +1008,7 @@ void ojocTable()
         while(countMutari)
         {
             datedeintrare:
-            dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
+            dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
 
             if(checkPieseEliminate(startJucator,tabla) == false)
             {
