@@ -207,8 +207,7 @@ void mesajMeniu()
 {
     cout<<"Welcom to our tables game."<<endl;
     cout<<"You can choose your type of game."<<endl;
-    cout<<"If you want to play with a friend, press 1."<<endl;
-    cout<<"If you want to try your chance and beat the computer, press 2."<<endl;
+    cout<<"If you want to play the game, press 1."<<endl;
 }
 
 char detMode(char &mode)
@@ -217,12 +216,12 @@ char detMode(char &mode)
     cin.getline(verification,1001);
     if(strlen(verification) != 1)
     {
-        cout<<"You can't fool us! Choose between 1 or 2!"<<endl;
+        cout<<"You can't fool us! Choose 1 or exit the game!"<<endl;
         detMode(mode);
     }
-    if(verification[0] != '1' && verification[0] != '2')
+    if(verification[0] != '1')
     {
-        cout<<"You can't fool us! Choose between 1 or 2!"<<endl;
+        cout<<"You can't fool us! Choose 1 or exit the game!"<<endl;
         detMode(mode);
     }
     else
@@ -251,7 +250,7 @@ bool checkLinieIncadrare(char verification[1001])
                 cout<<"Can't do that!"<<endl;
                 return false;
             }
-            if(verification[0] == '-')
+            {if(verification[0] == '-')
                 if(verification[1] != '1')
                 {
                     cout<<"Can't do that!"<<endl;
@@ -261,7 +260,7 @@ bool checkLinieIncadrare(char verification[1001])
             {
                 cout<<"Can't do that!"<<endl;
                 return false;
-            }
+            }}
         }
         else if(strlen(verification) == 1)
         {
@@ -419,25 +418,24 @@ void addData(player &player1, player &player2, char mode)
     player2.piesa = 'N';
 }
 
-bool checkToatePieseleInCasa(char tabla[26][15],short startJucator)
+void checkToatePieseleInCasa(char tabla[26][15],short startJucator,short &piese1,short &piese2)
 {
     if(startJucator == 1)
     {
-        if(tabla[0][0] != ' ')
-            return false;
-        for(short linie=24;linie>6;linie--)
-            if(tabla[linie][0] != ' ' || tabla[linie][0] != 'N')
-            return false;
+        piese1=0;
+        for(short linie=1;linie<=6;linie++)
+            for(short coloana=0;coloana<15;coloana++)
+                if(tabla[linie][coloana] == 'A')
+                    piese1++;
     }
     else if(startJucator == 2)
     {
-        if(tabla[25][0] != ' ')
-            return false;
-        for(short linie=1;linie<19;linie++)
-            if(tabla[linie][0] != ' ' && tabla[linie][0] != 'A')
-            return false;
+        piese2=0;
+        for(short linie=19;linie<=24;linie++)
+            for(short coloana=0;coloana<15;coloana++)
+                if(tabla[linie][coloana] == 'N')
+                    piese2++;
     }
-    return true;
 }
 
 bool checkPieseEliminate(short startJucator,char tabla[26][15])
@@ -876,10 +874,10 @@ void recalculateCountMutari(short startJucator,player &player1,player &player2,c
     }
 }
 
-void scoaterePiese(short startJucator,player &player1,player &player2,char tabla[26][15])
+void scoaterePiesePl1(short startJucator,player &player1,char tabla[26][15],short ok1)
 {
     short coloana,margine;
-    if(startJucator == 1)
+    if(startJucator == 1 && ok1 == 1)
     {
         coloana = 0;
         margine = 6;
@@ -914,6 +912,7 @@ void scoaterePiese(short startJucator,player &player1,player &player2,char tabla
         }
         else
         {
+            coloana = 0;
             while(tabla[margine][0] != 'A')
                 margine--;
             while(tabla[margine][coloana] != ' ')
@@ -925,19 +924,25 @@ void scoaterePiese(short startJucator,player &player1,player &player2,char tabla
             tabla[margine - player1.zar2][coloana] = 'A';
         }
     }
-    else
+}
+
+void scoaterePiesePl2(short startJucator,player &player2,char tabla[26][15],short ok2)
+{
+    short coloana,margine;
+    if(ok2 == 1 && startJucator == 2)
     {
         coloana = 0;
         margine = 19;
         if(tabla[25-player2.zar1][0] == 'N')
         {
-            while(tabla[player2.zar1][coloana] != ' ')
+            while(tabla[25-player2.zar1][coloana] != ' ')
                 coloana++;
-            tabla[player2.zar1][coloana - 1] = ' ';
-            player1.eliminate++;
+            tabla[25-player2.zar1][coloana - 1] = ' ';
+            player2.eliminate++;
         }
         else
         {
+            coloana = 0;
             while(tabla[margine][0] != 'N')
                 margine++;
             while(tabla[margine][coloana] != ' ')
@@ -948,14 +953,39 @@ void scoaterePiese(short startJucator,player &player1,player &player2,char tabla
                 coloana++;
             tabla[margine + player2.zar1][coloana] = 'N';
         }
+
+        coloana = 0;
+        margine = 19;
+
+        if(tabla[25-player2.zar2][0] == 'N')
+        {
+            coloana=0;
+            while(tabla[25-player2.zar2][coloana] != ' ')
+                coloana++;
+            tabla[player2.zar2][coloana-1] = ' ';
+            player2.eliminate++;
+        }
+        else
+        {
+            coloana = 0;
+            while(tabla[margine][0] != 'N')
+                margine++;
+            while(tabla[margine][coloana] != ' ')
+                coloana++;
+            tabla[margine][coloana-1] = ' ';
+            coloana = 0;
+            while(tabla[margine][coloana] != ' ')
+                coloana++;
+            tabla[margine + player2.zar2][coloana] = 'N';
+        }
     }
 }
 
 void ojocTable()
 {
     char mode, tabla[26][15];
-    short startJucator,countMutari;
-    bool ambeleZaruriImposibile, firstMove = true, canMutari;
+    short startJucator,countMutari,piese1=0,piese2=0,ok1=0,ok2=0;
+    bool ambeleZaruriImposibile, firstMove = true;
     player player1, player2;
 
     mesajMeniu();
@@ -969,7 +999,6 @@ void ojocTable()
     {
         short deLa, la;
         ambeleZaruriImposibile = false;
-        canMutari = true;
         afisareTabla(tabla);
         cout<<endl;
 
@@ -987,34 +1016,58 @@ void ojocTable()
 
         while(countMutari)
         {
-            if(checkToatePieseleInCasa(tabla,startJucator) == true)
-            {
-                cout<<"da";
-                Sleep(300);
-                scoaterePiese(startJucator,player1,player2,tabla);
-                canMutari = false;
-                goto jumpHere;
-            }
+            checkToatePieseleInCasa(tabla,startJucator,piese1,piese2);
 
-            datedeintrare:
-            dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
-
-            if(checkPieseEliminate(startJucator,tabla) == false)
+            if(piese1 == 15)
+                ok1=1;
+            if(piese2 == 15)
+                ok2=2;
+            if(ok1 == 1)
+                scoaterePiesePl1(startJucator,player1,tabla,ok1);
+            else if(ok2 == 1)
+                scoaterePiesePl2(startJucator,player2,tabla,ok2);
+            else if(ok1 ==0)
             {
-                if(checkDeLa(deLa,startJucator) == false)
+                datedeintrare1:
+                dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
+
+                if(checkPieseEliminate(startJucator,tabla) == false)
                 {
-                    cout<<"You have pieces removed by your opponent. Get them back in the game."<<endl;
-                    goto datedeintrare;
+                    if(checkDeLa(deLa,startJucator) == false)
+                    {
+                        cout<<"You have pieces removed by your opponent. Get them back in the game."<<endl;
+                        goto datedeintrare1;
+                    }
+                    if(checkDatePieseEliminate(deLa,la,startJucator,player1,player2,tabla) == false)
+                        goto datedeintrare1;
                 }
-                if(checkDatePieseEliminate(deLa,la,startJucator,player1,player2,tabla) == false)
-                    goto datedeintrare;
+                else if(checkDateIntrare(deLa,la,startJucator,player1,player2,tabla) == false)
+                    goto datedeintrare1;
+                mutari(deLa,la,tabla);
             }
-            else if(checkDateIntrare(deLa,la,startJucator,player1,player2,tabla) == false)
-                goto datedeintrare;
+            else if(ok2 == 0)
+            {
+                datedeintrare2:
+                dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
 
-            mutari(deLa,la,tabla);
+                if(checkPieseEliminate(startJucator,tabla) == false)
+                {
+                    if(checkDeLa(deLa,startJucator) == false)
+                    {
+                        cout<<"You have pieces removed by your opponent. Get them back in the game."<<endl;
+                        goto datedeintrare2;
+                    }
+                    if(checkDatePieseEliminate(deLa,la,startJucator,player1,player2,tabla) == false)
+                        goto datedeintrare2;
+                }
+                else if(checkDateIntrare(deLa,la,startJucator,player1,player2,tabla) == false)
+                    goto datedeintrare2;
+                mutari(deLa,la,tabla);
+            }
 
-            jumpHere:
+            checkToatePieseleInCasa(tabla,startJucator,piese1,piese2);
+            Sleep(100);
+
             system("cls");
             afisareTabla(tabla);
             if(startJucator == 1)
