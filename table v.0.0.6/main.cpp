@@ -246,12 +246,18 @@ bool checkLinieIncadrare(char verification[1001])
     {
         if(strlen(verification) == 2)
         {
-            if(verification[0] != '1' && verification[0] != '2')
+            if(verification[0] != '1' && verification[0] != '2' && verification[0] != '-')
             {
                 cout<<"Can't do that!"<<endl;
                 return false;
             }
-            if(verification[1] < '0' || verification[1] > '9')
+            if(verification[0] == '-')
+                if(verification[1] != '1')
+                {
+                    cout<<"Can't do that!"<<endl;
+                    return false;
+                }
+            else if(verification[1] < '0' || verification[1] > '9')
             {
                 cout<<"Can't do that!"<<endl;
                 return false;
@@ -661,98 +667,6 @@ void mutari(short dela,short la,char tabla[26][15])
     tabla[dela][coloana-1]=' ';
 }
 
-bool checkDateEliminarePiese(short startJucator,short deLa,short la,char tabla[26][15],player player1,player player2)
-{
-    cout<<"Now begin to remove your pieces!"<<endl;
-    if(startJucator == 1)
-    {
-        if(deLa<1 || deLa>6)
-        {
-            cout<<"keep it between 1 and 6."<<endl;
-            return false;
-        }
-        if(la!=-1 && (la<1 || la>5))
-        {
-            cout<<"Keep it between 1 and 5 or remove your piece by typing -1."<<endl;
-            return false;
-        }
-        if(deLa <= la)
-        {
-            cout<<"Wrong way!"<<endl;
-            return false;
-        }
-        if(tabla[deLa][0] == ' ' || tabla[deLa][0] == 'N')
-        {
-            cout<<"You can't pick that number!"<<endl;
-            return false;
-        }
-        if(la == -1)
-        {
-            if(deLa != player1.zar1 && deLa != player1.zar2)
-            {
-                cout<<"Your move doesn't match the dices."<<endl;
-                return false;
-            }
-        }
-        else
-        {
-            if(deLa - la != player1.zar1 && deLa - la != player1.zar2)
-            {
-                cout<<"Your move doesn't match the dices."<<endl;
-                return false;
-            }
-            if(tabla[la][0] == 'N' && tabla[la][1] == 'N')
-            {
-                cout<<"That point is occupied by your opponent."<<endl;
-                return false;
-            }
-        }
-    }
-    else
-    {
-        if(deLa>24 && deLa<19)
-        {
-            cout<<"Keep it between 19 and 24."<<endl;
-            return false;
-        }
-            if(la!=-1 && (la<20 || la>24))
-            {
-                cout<<"Keep it between 20 and 24 or remove your piece by typing -1"<<endl;
-                return false;
-            }
-            if(deLa >= la && la != -1)
-            {
-                cout<<"Wrong way!"<<endl;
-                return false;
-            }
-            if(tabla[deLa][0] == ' ' || tabla[deLa][0] == 'A')
-            {
-                cout<<"You can't pick that number!"<<endl;
-                return false;
-            }
-            if(la == -1)
-            {
-                if(25 - deLa != player1.zar1 && 25 - deLa != player1.zar2)
-                {
-                    cout<<"Your move doens't match the dices"<<endl;
-                    return false;
-                }
-            }
-            else
-            {
-                if(la - deLa != player1.zar1 && la - deLa != player1.zar2)
-                {
-                    cout<<"Your move doens't match the dices"<<endl;
-                    return false;
-                }
-                if(tabla[la][0] == 'A' && tabla[la][1] == 'A')
-                {
-                    cout<<"That point is occupied by our opponent."<<endl;
-                    return false;
-                }
-            }
-    }
-}
 
 void mutareFacuta(short &countMutari, player &playerNo,short mutare)
 {
@@ -781,192 +695,267 @@ void switchPlayers(short &startJucator)
 void recalculateCountMutari(short startJucator,player &player1,player &player2,char tabla[26][15],short &countMutari)
 {
     if(isDubla(translatePlayer(startJucator,player1,player2)) == true)
+    {
+        if(startJucator == 1)
         {
-            if(startJucator == 1)
+            if(mutareImposibila(tabla,startJucator,player1.zar1) == true)
             {
-                if(mutareImposibila(tabla,startJucator,player1.zar1) == true)
-                {
-                    countMutari = 0;
-                    player1.zar1 = 0;
-                    player2.zar2 = 0;
-                }
-            }
-            else
-            {
-                if(mutareImposibila(tabla,startJucator,player2.zar1) == true)
-                {
-                    countMutari = 0;
-                    player2.zar1 = 0;
-                    player2.zar2 = 0;
-                }
+                countMutari = 0;
+                player1.zar1 = 0;
+                player2.zar2 = 0;
             }
         }
         else
         {
-            if(startJucator == 1)
+            if(mutareImposibila(tabla,startJucator,player2.zar1) == true)
             {
-                if(checkPieseEliminate(startJucator,tabla) == false)
+                countMutari = 0;
+                player2.zar1 = 0;
+                player2.zar2 = 0;
+            }
+        }
+    }
+    else
+    {
+        if(startJucator == 1)
+        {
+            if(checkPieseEliminate(startJucator,tabla) == false)
+            {
+                if(tabla[0][1] != ' ')
                 {
-                    if(tabla[0][1] != ' ')
+                    if(mutareImposibila(tabla,startJucator,player1.zar1) == true)
                     {
-                        if(mutareImposibila(tabla,startJucator,player1.zar1) == true)
-                        {
-                            countMutari--;
-                            player1.zar1 = 0;
-                        }
-                        if(mutareImposibila(tabla,startJucator,player1.zar2) == true)
-                        {
-                            countMutari--;
-                            player1.zar2 = 0;
-                        }
+                        countMutari--;
+                        player1.zar1 = 0;
                     }
-                    else
+                    if(mutareImposibila(tabla,startJucator,player1.zar2) == true)
                     {
-                        if(mutareImposibila(tabla,startJucator,player1.zar1) == true && mutareImposibila(tabla,startJucator,player1.zar2) == true)
-                        {
-                            countMutari = 0;
-                            player1.zar1 = 0;
-                            player1.zar2 = 0;
-                        }
-                        else if(player1.zar1 == 0)
-                        {
-                            if(mutareImposibila(tabla,startJucator,player1.zar2) == true)
-                            {
-                                countMutari = 0;
-                                player1.zar2 = 0;
-                            }
-                        }
-                        else if(player1.zar2 == 0)
-                        {
-                            if(mutareImposibila(tabla,startJucator,player1.zar1) == true)
-                            {
-                                countMutari == 0;
-                                player1.zar1 =0;
-                            }
-                        }
+                        countMutari--;
+                        player1.zar2 = 0;
                     }
                 }
                 else
                 {
                     if(mutareImposibila(tabla,startJucator,player1.zar1) == true && mutareImposibila(tabla,startJucator,player1.zar2) == true)
+                    {
+                        countMutari = 0;
+                        player1.zar1 = 0;
+                        player1.zar2 = 0;
+                    }
+                    else if(player1.zar1 == 0)
+                    {
+                        if(mutareImposibila(tabla,startJucator,player1.zar2) == true)
                         {
                             countMutari = 0;
-                            player1.zar1 = 0;
                             player1.zar2 = 0;
                         }
-                    else
+                    }
+                    else if(player1.zar2 == 0)
+                    {
+                        if(mutareImposibila(tabla,startJucator,player1.zar1) == true)
                         {
-                        if(mutareImposibila(tabla,startJucator,player1.zar1) == true && mutareImposibila(tabla,startJucator,player1.zar2) == true)
-                        {
-                            countMutari = 0;
-                            player1.zar1 = 0;
-                            player1.zar2 = 0;
-                        }
-                        else if(player1.zar1 == 0)
-                        {
-                            if(mutareImposibila(tabla,startJucator,player1.zar2) == true)
-                            {
-                                countMutari = 0;
-                                player1.zar2 = 0;
-                            }
-                        }
-                        else if(player1.zar2 == 0)
-                        {
-                            if(mutareImposibila(tabla,startJucator,player1.zar1) == true)
-                            {
-                                countMutari == 0;
-                                player1.zar1 =0;
-                            }
+                            countMutari == 0;
+                            player1.zar1 =0;
                         }
                     }
                 }
             }
             else
             {
-                if(checkPieseEliminate(startJucator,tabla) == false)
+                if(mutareImposibila(tabla,startJucator,player1.zar1) == true && mutareImposibila(tabla,startJucator,player1.zar2) == true)
                 {
-                    if(tabla[0][1] != ' ')
-                    {
-                        if(mutareImposibila(tabla,startJucator,player2.zar1) == true)
-                        {
-                            countMutari--;
-                            player2.zar1 = 0;
-                        }
-                        if(mutareImposibila(tabla,startJucator,player2.zar2) == true)
-                        {
-                            countMutari--;
-                            player2.zar2 = 0;
-                        }
-                    }
-                    else
-                    {
-                        if(mutareImposibila(tabla,startJucator,player2.zar1) == true && mutareImposibila(tabla,startJucator,player2.zar2) == true)
-                        {
-                            countMutari = 0;
-                            player2.zar1 = 0;
-                            player2.zar2 = 0;
-                        }
-                        else if(player2.zar1 == 0)
-                        {
-                            if(mutareImposibila(tabla,startJucator,player2.zar2) == true)
-                            {
-                                countMutari = 0;
-                                player2.zar2 = 0;
-                            }
-                        }
-                        else if(player2.zar2 == 0)
-                        {
-                            if(mutareImposibila(tabla,startJucator,player2.zar1) == true)
-                            {
-                                countMutari == 0;
-                                player2.zar1 =0;
-                            }
-                        }
-                    }
+                    countMutari = 0;
+                    player1.zar1 = 0;
+                    player1.zar2 = 0;
                 }
                 else
                 {
-                    if(mutareImposibila(tabla,startJucator,player2.zar1) == true && mutareImposibila(tabla,startJucator,player2.zar2) == true)
+                    if(mutareImposibila(tabla,startJucator,player1.zar1) == true && mutareImposibila(tabla,startJucator,player1.zar2) == true)
+                    {
+                        countMutari = 0;
+                        player1.zar1 = 0;
+                        player1.zar2 = 0;
+                    }
+                    else if(player1.zar1 == 0)
+                    {
+                        if(mutareImposibila(tabla,startJucator,player1.zar2) == true)
                         {
                             countMutari = 0;
-                            player2.zar1 = 0;
-                            player2.zar2 = 0;
+                            player1.zar2 = 0;
                         }
-                    else
+                    }
+                    else if(player1.zar2 == 0)
+                    {
+                        if(mutareImposibila(tabla,startJucator,player1.zar1) == true)
                         {
-                        if(mutareImposibila(tabla,startJucator,player2.zar1) == true && mutareImposibila(tabla,startJucator,player2.zar2) == true)
-                        {
-                            countMutari = 0;
-                            player2.zar1 = 0;
-                            player2.zar2 = 0;
-                        }
-                        else if(player2.zar1 == 0)
-                        {
-                            if(mutareImposibila(tabla,startJucator,player2.zar2) == true)
-                            {
-                                countMutari = 0;
-                                player2.zar2 = 0;
-                            }
-                        }
-                        else if(player2.zar2 == 0)
-                        {
-                            if(mutareImposibila(tabla,startJucator,player2.zar1) == true)
-                            {
-                                countMutari == 0;
-                                player2.zar1 =0;
-                            }
+                            countMutari == 0;
+                            player1.zar1 =0;
                         }
                     }
                 }
             }
         }
+        else
+        {
+            if(checkPieseEliminate(startJucator,tabla) == false)
+            {
+                if(tabla[0][1] != ' ')
+                {
+                    if(mutareImposibila(tabla,startJucator,player2.zar1) == true)
+                    {
+                        countMutari--;
+                        player2.zar1 = 0;
+                    }
+                    if(mutareImposibila(tabla,startJucator,player2.zar2) == true)
+                    {
+                        countMutari--;
+                        player2.zar2 = 0;
+                    }
+                }
+                else
+                {
+                    if(mutareImposibila(tabla,startJucator,player2.zar1) == true && mutareImposibila(tabla,startJucator,player2.zar2) == true)
+                    {
+                        countMutari = 0;
+                        player2.zar1 = 0;
+                        player2.zar2 = 0;
+                    }
+                    else if(player2.zar1 == 0)
+                    {
+                        if(mutareImposibila(tabla,startJucator,player2.zar2) == true)
+                        {
+                            countMutari = 0;
+                            player2.zar2 = 0;
+                        }
+                    }
+                    else if(player2.zar2 == 0)
+                    {
+                        if(mutareImposibila(tabla,startJucator,player2.zar1) == true)
+                        {
+                            countMutari == 0;
+                            player2.zar1 =0;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if(mutareImposibila(tabla,startJucator,player2.zar1) == true && mutareImposibila(tabla,startJucator,player2.zar2) == true)
+                {
+                    countMutari = 0;
+                    player2.zar1 = 0;
+                    player2.zar2 = 0;
+                }
+                else
+                {
+                    if(mutareImposibila(tabla,startJucator,player2.zar1) == true && mutareImposibila(tabla,startJucator,player2.zar2) == true)
+                    {
+                        countMutari = 0;
+                        player2.zar1 = 0;
+                        player2.zar2 = 0;
+                    }
+                    else if(player2.zar1 == 0)
+                    {
+                        if(mutareImposibila(tabla,startJucator,player2.zar2) == true)
+                        {
+                            countMutari = 0;
+                            player2.zar2 = 0;
+                        }
+                    }
+                    else if(player2.zar2 == 0)
+                    {
+                        if(mutareImposibila(tabla,startJucator,player2.zar1) == true)
+                        {
+                            countMutari == 0;
+                            player2.zar1 =0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void scoaterePiese(short startJucator,player &player1,player &player2,char tabla[26][15])
+{
+    short coloana,margine;
+    if(startJucator == 1)
+    {
+        coloana = 0;
+        margine = 6;
+        if(tabla[player1.zar1][0] == 'A')
+        {
+            while(tabla[player1.zar1][coloana] != ' ')
+                coloana++;
+            tabla[player1.zar1][coloana-1] = ' ';
+            player1.eliminate++;
+        }
+        else
+        {
+            while(tabla[margine][0] != 'A')
+                margine--;
+            while(tabla[margine][coloana] != ' ')
+                coloana++;
+            tabla[margine][coloana-1] = ' ';
+            coloana = 0;
+            while(tabla[margine][coloana] != ' ')
+                coloana++;
+            tabla[margine - player1.zar1][coloana] = 'A';
+        }
+        coloana = 0;
+        margine = 6;
+
+        if(tabla[player1.zar2][0] == 'A')
+        {
+            while(tabla[player1.zar2][coloana] != ' ')
+                coloana++;
+            tabla[player1.zar2][coloana-1] = ' ';
+            player1.eliminate++;
+        }
+        else
+        {
+            while(tabla[margine][0] != 'A')
+                margine--;
+            while(tabla[margine][coloana] != ' ')
+                coloana++;
+            tabla[margine][coloana-1] = ' ';
+            coloana = 0;
+            while(tabla[margine][coloana] != ' ')
+                coloana++;
+            tabla[margine - player1.zar2][coloana] = 'A';
+        }
+    }
+    else
+    {
+        coloana = 0;
+        margine = 19;
+        if(tabla[25-player2.zar1][0] == 'N')
+        {
+            while(tabla[player2.zar1][coloana] != ' ')
+                coloana++;
+            tabla[player2.zar1][coloana - 1] = ' ';
+            player1.eliminate++;
+        }
+        else
+        {
+            while(tabla[margine][0] != 'N')
+                margine++;
+            while(tabla[margine][coloana] != ' ')
+                coloana++;
+            tabla[margine][coloana-1] = ' ';
+            coloana = 0;
+            while(tabla[margine + player2.zar1][coloana] != ' ')
+                coloana++;
+            tabla[margine + player2.zar1][coloana] = 'N';
+        }
+    }
 }
 
 void ojocTable()
 {
     char mode, tabla[26][15];
     short startJucator,countMutari;
-    bool ambeleZaruriImposibile = false, firstMove = true;
+    bool ambeleZaruriImposibile, firstMove = true, canMutari;
     player player1, player2;
 
     mesajMeniu();
@@ -980,6 +969,7 @@ void ojocTable()
     {
         short deLa, la;
         ambeleZaruriImposibile = false;
+        canMutari = true;
         afisareTabla(tabla);
         cout<<endl;
 
@@ -997,6 +987,15 @@ void ojocTable()
 
         while(countMutari)
         {
+            if(checkToatePieseleInCasa(tabla,startJucator) == true)
+            {
+                cout<<"da";
+                Sleep(300);
+                scoaterePiese(startJucator,player1,player2,tabla);
+                canMutari = false;
+                goto jumpHere;
+            }
+
             datedeintrare:
             dateDeIntrare(deLa,la,player1,player2,startJucator,mode,firstMove);
 
@@ -1010,19 +1009,12 @@ void ojocTable()
                 if(checkDatePieseEliminate(deLa,la,startJucator,player1,player2,tabla) == false)
                     goto datedeintrare;
             }
-            else if(checkToatePieseleInCasa(tabla,startJucator) == true)
-                checkDateEliminarePiese(startJucator,deLa,la,tabla,player1,player2);
             else if(checkDateIntrare(deLa,la,startJucator,player1,player2,tabla) == false)
                 goto datedeintrare;
-            if(la == -1)
-            {
-                if(startJucator == 1)
-                    player1.eliminate++;
-                else if (startJucator == 2)
-                    player2.eliminate++;
-            }
 
             mutari(deLa,la,tabla);
+
+            jumpHere:
             system("cls");
             afisareTabla(tabla);
             if(startJucator == 1)
@@ -1088,7 +1080,7 @@ void ojocTable()
 
         if(ambeleZaruriImposibile == true)
         {
-            cout<<"No move can be made."<<endl;
+            cout<<"No moves can be made."<<endl;
             Sleep(3000);
         }
         switchPlayers(startJucator);
