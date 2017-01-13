@@ -1,0 +1,25 @@
+# depslib dependency file v1.0
+1482921102 source:c:\users\user\desktop\table v.0.0.4\main.cpp
+	<iostream>
+	<string.h>
+
+1483048019 source:c:\users\diana\documents\codeblocks projects\table v.0.0.4\main.cpp
+	"proiect.h"
+
+1483038287 c:\users\diana\documents\codeblocks projects\table v.0.0.4\proiect.h
+	<iostream>
+	<string.h>
+	<time.h>
+	<stdlib.h>
+	<time.h>
+
+1484323756 source:c:\users\diana\documents\codeblocks projects\table v.0.0.5\main.cpp
+	"proiect.h"
+
+1484323770 c:\users\diana\documents\codeblocks projects\table v.0.0.5\proiect.h
+	<iostream>
+	<string.h>
+	<time.h>
+	<stdlib.h>
+	<windows.h>
+
