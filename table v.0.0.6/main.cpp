@@ -896,7 +896,7 @@ void scoaterePiesePl1(short startJucator,player &player1,char tabla[26][15],shor
                 coloana++;
             tabla[margine][coloana-1] = ' ';
             coloana = 0;
-            while(tabla[margine][coloana] != ' ')
+            while(tabla[margine - player1.zar1][coloana] != ' ')
                 coloana++;
             tabla[margine - player1.zar1][coloana] = 'A';
         }
@@ -919,7 +919,7 @@ void scoaterePiesePl1(short startJucator,player &player1,char tabla[26][15],shor
                 coloana++;
             tabla[margine][coloana-1] = ' ';
             coloana = 0;
-            while(tabla[margine][coloana] != ' ')
+            while(tabla[margine - player1.zar1][coloana] != ' ')
                 coloana++;
             tabla[margine - player1.zar2][coloana] = 'A';
         }
@@ -974,7 +974,7 @@ void scoaterePiesePl2(short startJucator,player &player2,char tabla[26][15],shor
                 coloana++;
             tabla[margine][coloana-1] = ' ';
             coloana = 0;
-            while(tabla[margine][coloana] != ' ')
+            while(tabla[margine + player2.zar2][coloana] != ' ')
                 coloana++;
             tabla[margine + player2.zar2][coloana] = 'N';
         }
