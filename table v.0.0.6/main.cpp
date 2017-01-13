@@ -281,6 +281,12 @@ void transformCharInt(short &number,char verification[100])
         number = (int)verification[0] - 48;
 }
 
+
+void cinGetLine(char verification[1001])
+{
+    cin.getline(verification,1001);
+}
+
 void repartizareZaruriJoc(short startJucator, player &player1, player &player2)
 {
     cout<<"Zarurile sunt: ";
@@ -302,45 +308,44 @@ void dateDeIntrare(short &deLa,short &la,player player1,player player2,short sta
 {
     char verification1[1001],verification2[1001];
     if(mode == '1')
+    {
+        if(startJucator == 1)
         {
-            if(startJucator == 1)
             cout<<player1.nume;
-            else
-            cout<<player2.nume;
-            cout<<" introduce numarul liniei de unde vrei sa iei piesa: ";
-            cin>>verification1;
-            cout<<" si numarul liniei unde vrei s-o pui: ";
-            cin>>verification2;
+            cout<<" introduce numarul liniei de unde vrei sa iei piesa."<<endl;
+            cin.get();
+            cinGetLine(verification1);
             if(checkLinieIncadrare(verification1) == false)
                 dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
+            else
+                transformCharInt(deLa,verification1);
+            cout<<"si numarul liniei unde vrei s-o pui."<<endl;
+            cinGetLine(verification2);
             if(checkLinieIncadrare(verification2) == false)
                 dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
-            if(checkLinieIncadrare(verification1) == true && checkLinieIncadrare(verification2) == true)
-            {
-                transformCharInt(deLa,verification1);
-                transformCharInt(deLa,verification2);
-            }
+            else
+                transformCharInt(la,verification2);
         }
         else
         {
-            if(startJucator == 1)
-            {
-                cout<<player1.nume;
-                cout<<" introduce numarul liniei de unde vrei sa iei piesa: ";
-                cin>>verification1;
-                cout<<" si numarul liniei unde vrei s-o pui: ";
-                cin>>verification2;
-                if(checkLinieIncadrare(verification1) == false)
-                    dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
-                if(checkLinieIncadrare(verification2) == false)
-                    dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
-                if(checkLinieIncadrare(verification1) == true && checkLinieIncadrare(verification2) == true)
-                {
-                    transformCharInt(deLa,verification1);
-                    transformCharInt(deLa,verification2);
-                }
-            }
+            cout<<player2.nume;
+
+            cout<<" introduce numarul liniei de unde vrei sa iei piesa: "<<endl;
+            cin.get();
+            cinGetLine(verification1);
+            if(checkLinieIncadrare(verification1) == false)
+                dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
+            else
+                transformCharInt(deLa,verification1);
+            cout<<"si numarul liniei unde vrei s-o pui: "<<endl;
+            cinGetLine(verification2);
+            if(checkLinieIncadrare(verification2) == false)
+                dateDeIntrare(deLa,la,player1,player2,startJucator,mode);
+            else
+                transformCharInt(la,verification2);
         }
+    }
+
 }
 
 void addData(player &player1, player &player2, char mode)
